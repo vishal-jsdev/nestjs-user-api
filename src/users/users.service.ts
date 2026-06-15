@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,11 +14,17 @@ export class UsersService {
     }
 
     createUser(user:any){
-        this.users.push(user)
-        return user;
+        const newUser = {
+            id: this.users.length + 1,
+            email: user.email,
+            gender: user.gender ?? 'unspecified',
+            isMarried: user.isMarried ?? false,
+        };
+        this.users.push(newUser)
+        return newUser;
     }
 
-    updateUser(user:any){
+    updateUser(user:UpdateUserDto){
         this.users.filter(u=>u.id===user.id).forEach(u=>{
             if(user.email){
                 u.email=user.email;
@@ -37,10 +44,11 @@ export class UsersService {
     }
 
     removeUser(userId:number){
-        const index = this.users.findIndex(user => user.id === userId);
+        const index = this.users.findIndex((user) => user.id === userId);
+        const deletedUser = this.users[index];
         if (index > -1) {
             this.users.splice(index, 1);
         }
-        return index
+        return deletedUser;
     }
 }
