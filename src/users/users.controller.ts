@@ -3,39 +3,39 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { plainToInstance } from 'class-transformer';
-import { CreateResponseUserDto } from './dtos/create-response-user.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly userService: UsersService){}
 
     @Get()
-    getAllUsers(){
+    getAllUsers(): UserResponseDto[]{
         const users =  this.userService.getAllUsers()
-        return plainToInstance(CreateResponseUserDto, users)
+        return plainToInstance(UserResponseDto, users)
     }
 
     @Post()
-    createUser(@Body()user:CreateUserDto){
+    createUser(@Body()user:CreateUserDto): UserResponseDto{
         const userData = this.userService.createUser(user)
-        return plainToInstance(CreateResponseUserDto,userData);
+        return plainToInstance(UserResponseDto,userData);
     }
 
     @Patch()
-    updateUser(@Body() user:UpdateUserDto){
+    updateUser(@Body() user:UpdateUserDto): UserResponseDto {
         const userData =  this.userService.updateUser(user)
-        return plainToInstance(CreateResponseUserDto, userData)
+        return plainToInstance(UserResponseDto, userData)
     }
 
     @Get(':id')
-    getUser(@Param('id', ParseIntPipe)id:number){
+    getUser(@Param('id', ParseIntPipe)id:number): UserResponseDto{
         const user =  this.userService.getUser(id)
-        return plainToInstance(CreateResponseUserDto, user)
+        return plainToInstance(UserResponseDto, user)
     }
 
     @Delete(':id')
     removeUser(@Param('id', ParseIntPipe)id:number){
         const user = this.userService.removeUser(id);
-        return plainToInstance(CreateResponseUserDto, user);
+        return plainToInstance(UserResponseDto, user);
     }
 }

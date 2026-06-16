@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -9,7 +11,7 @@ export class UsersService {
      {id:2, email:'john@gmail.com',gender:'male',isMarried:false}
     ]
 
-    getAllUsers(){
+    getAllUsers():UserResponseDto[]|undefined{
         return this.users
     }
 
@@ -24,7 +26,7 @@ export class UsersService {
         return newUser;
     }
 
-    updateUser(user:UpdateUserDto){
+    updateUser(user:UpdateUserDto):UserResponseDto | undefined{
         this.users.filter(u=>u.id===user.id).forEach(u=>{
             if(user.email){
                 u.email=user.email;
@@ -39,11 +41,11 @@ export class UsersService {
         return this.users.find(u=>u.id===user.id)
     }
 
-    getUser(userId:number){
+    getUser(userId:number): UserResponseDto | undefined{
         return this.users.find(u=>u.id===userId)
     }
 
-    removeUser(userId:number){
+    removeUser(userId:number): UserResponseDto | undefined{
         const index = this.users.findIndex((user) => user.id === userId);
         const deletedUser = this.users[index];
         if (index > -1) {
