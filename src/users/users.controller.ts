@@ -1,17 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dtos/user-response.dto';
+import { PageQueryDto } from './dtos/page-query.dto';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly userService: UsersService){}
 
     @Get()
-    getAllUsers(): UserResponseDto[]{
-        const users =  this.userService.getAllUsers()
+    getAllUsers(@Query()pageQueryDto:PageQueryDto): UserResponseDto[]{
+        const users =  this.userService.getAllUsers(pageQueryDto)
         return plainToInstance(UserResponseDto, users)
     }
 
@@ -21,9 +22,11 @@ export class UsersController {
         return plainToInstance(UserResponseDto,userData);
     }
 
-    @Patch()
-    updateUser(@Body() user:UpdateUserDto): UserResponseDto {
-        const userData =  this.userService.updateUser(user)
+    @Patch(":id")
+    updateUser(
+            @Param('id', ParseIntPipe) id:number,
+        @Body() user:UpdateUserDto): UserResponseDto {
+        const userData =  this.userService.updateUser(user, id)
         return plainToInstance(UserResponseDto, userData)
     }
 
