@@ -1,11 +1,56 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, RequestTimeoutException, UnauthorizedException } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { PageQueryDto } from './dtos/page-query.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { SignupDto } from 'src/auth/dto/signup.dto';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { HashingProvider } from 'src/auth/provider/hashing.provider';
+import { LoginDto } from 'src/auth/dto/login.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
+    
+    constructor(
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+
+        @Inject(forwardRef(()=>HashingProvider))
+        private readonly hashingProvider: HashingProvider,
+
+        private readonly configService:ConfigService
+   
+    ){}
+
+    async signup(signupDto: SignupDto) {
+        let user = this.userRepository.create({
+            ...signupDto,
+            password: await this.hashingProvider.hashPassword(signupDto.password)
+        });
+         let userData = await this.userRepository.save(user);
+         return userData
+        }
+
+
+    async findUserByEmail(email:string) {
+        let user
+        try {
+            
+            user = await this.userRepository.findOneBy({email})
+        } catch(error){
+            throw new RequestTimeoutException(error, {
+                description: 'User with given email could not be found!'
+            })
+        }
+        if(!user){
+            throw new UnauthorizedException('User does not exist!')
+        }
+
+        return user;
+    }
 
     users: { id: number, email: string, gender: string, isMarried: boolean }[] =
         [{ id: 1, email: 'jeo@gmail.com', gender: 'male', isMarried: false },
@@ -13,6 +58,8 @@ export class UsersService {
         ]
 
     getAllUsers(pageQueryDto: PageQueryDto): UserResponseDto[] {
+        const evnvironment = this.configService.get('ENV_MODE');
+        console.log(evnvironment)        
         const skip = (pageQueryDto.page - 1) * pageQueryDto.limit;
         return this.users.slice(skip, skip + pageQueryDto.limit)
     }

@@ -1,15 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { PageQueryDto } from './dtos/page-query.dto';
+import { AuthorizeGuard } from 'src/auth/guards/authorize.guard';
 
 @Controller('users')
+ @UseGuards(AuthorizeGuard)
 export class UsersController {
     constructor(private readonly userService: UsersService){}
 
+   
     @Get()
     getAllUsers(@Query()pageQueryDto:PageQueryDto): UserResponseDto[]{
         const users =  this.userService.getAllUsers(pageQueryDto)
