@@ -1,8 +1,6 @@
-import { Expose } from "class-transformer";
+import { Expose } from 'class-transformer';
 
 export class LoginResponseDto {
-    @Expose()
-    token:string
-    @Expose()
-    refreshToken: string
+  @Expose()
+  token!: string;
 }
