@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsString,
   MinLength,
-  minLength,
 } from 'class-validator';
 
 export class SignupDto {
@@ -31,4 +30,7 @@ export class SignupDto {
 
   @IsOptional()
   isMarried: boolean;
+
+  @IsOptional()
+  roles: string;
 }

@@ -30,8 +30,7 @@ export class AuthService {
   }
 
   public async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    console.log(this.authConfiguration);
-    let user = await this.userService.findUserByEmail(loginDto.email);
+    const user = await this.userService.findUserByEmail(loginDto.email);
 
     const isEqual = await this.hashingProvider.comparePassword(
       loginDto.password,
@@ -45,6 +44,7 @@ export class AuthService {
       {
         sub: user.id,
         email: user.email,
+        roles: user.roles,
       },
       {
         secret: this.authConfiguration.secret,
