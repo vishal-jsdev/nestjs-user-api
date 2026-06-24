@@ -18,19 +18,20 @@ export class SignupDto {
 
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName?: string;
 
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName?: string;
 
   @IsString()
   @IsOptional()
-  gender: string;
+  gender?: string;
 
   @IsOptional()
-  isMarried: boolean;
+  isMarried?: boolean;
 
-  @IsOptional()
-  roles: string;
+  @IsString()
+  @IsNotEmpty()
+  roles!: string;
 }

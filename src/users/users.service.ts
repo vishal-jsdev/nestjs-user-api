@@ -1,6 +1,8 @@
 import {
-  BadRequestException,
+  ConflictException,
   forwardRef,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   NotFoundException,
@@ -36,7 +38,7 @@ export class UsersService {
       email: signupDto.email,
     });
     if (existingUser) {
-      throw new BadRequestException('email is already exists!');
+      throw new ConflictException('email is already exists!');
     }
     const user = this.userRepository.create({
       ...signupDto,
@@ -60,6 +62,27 @@ export class UsersService {
     }
 
     return user as User;
+  }
+
+  async findUserById(id: any) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `The user with ID ${id} was not found.`,
+          table: 'user',
+        },
+        HttpStatus.NOT_FOUND,
+        {
+          description:
+            'The exception occured because a user with ID ' +
+            id +
+            ' was not found in users table.',
+        },
+      );
+    }
+    return user;
   }
 
   users: { id: number; email: string; gender: string; isMarried: boolean }[] = [

@@ -28,7 +28,6 @@ import { Role } from 'src/auth/constant/auth.constant';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   @Roles(Role.User, Role.Admin)
   getAllUsers(@Query() pageQueryDto: PageQueryDto): UserResponseDto[] {

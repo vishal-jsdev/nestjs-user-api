@@ -19,7 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   // Passport automatically decodes the signature. If valid, it passes the payload here.
   async validate(payload: any) {
     // The returned object is automatically attached to the Request object as req.user
-    console.log(payload);
     return {
       userId: payload.sub,
       username: payload.username,

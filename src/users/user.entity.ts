@@ -1,3 +1,4 @@
+import { Role } from 'src/auth/constant/auth.constant';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -30,6 +31,9 @@ export class User {
 
   @Column({
     nullable: true,
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
   })
-  roles: string;
+  roles!: string;
 }

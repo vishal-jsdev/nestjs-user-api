@@ -13,6 +13,8 @@ import authConfig from './config/auth.config';
 import { JwtService } from '@nestjs/jwt';
 import { UserResponseDto } from 'src/users/dtos/user-response.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -40,19 +42,57 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = await this.jwtService.signAsync(
+    return await this.generateToken(user);
+  }
+
+  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
       {
-        sub: user.id,
-        email: user.email,
-        roles: user.roles,
+        sub: userId,
+        ...payload,
       },
       {
         secret: this.authConfiguration.secret,
-        expiresIn: this.authConfiguration.expiresIn,
+        expiresIn: expiresIn,
         audience: this.authConfiguration.audience,
         issuer: this.authConfiguration.issuer,
       },
     );
-    return { token };
+  }
+
+  private async generateToken(user: User) {
+    const accessToken = await this.signToken(
+      user.id,
+      this.authConfiguration.expiresIn,
+      { email: user.email, roles: user.roles },
+    );
+
+    const refreshToken = await this.signToken(
+      user.id,
+      this.authConfiguration.refreshTokenExpiresIn,
+      { roles: user.roles },
+    );
+    return {
+      token: accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub } = await this.jwtService.verifyAsync(
+        refreshTokenDto.refreshToken,
+        {
+          secret: this.authConfiguration.secret,
+          audience: this.authConfiguration.audience,
+          issuer: this.authConfiguration.issuer,
+        },
+      );
+
+      const user = await this.userService.findUserById(sub);
+      return await this.generateToken(user);
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
   }
 }
