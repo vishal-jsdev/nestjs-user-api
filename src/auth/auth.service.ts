@@ -66,13 +66,13 @@ export class AuthService {
     const accessToken = await this.signToken(
       user.id,
       this.authConfiguration.expiresIn,
-      { email: user.email, roles: user.role },
+      { email: user.email, role: user.role },
     );
 
     const refreshToken = await this.signToken(
       user.id,
       this.authConfiguration.refreshTokenExpiresIn,
-      { roles: user.role },
+      { role: user.role },
     );
     return {
       token: accessToken,

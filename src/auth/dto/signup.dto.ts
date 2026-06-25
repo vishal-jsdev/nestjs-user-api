@@ -26,8 +26,8 @@ export class SignupDto {
   @IsOptional()
   lastName?: string;
 
-  @IsString()
   @IsOptional()
+  @IsEnum(['male', 'female'])
   gender?: string;
 
   @IsOptional()

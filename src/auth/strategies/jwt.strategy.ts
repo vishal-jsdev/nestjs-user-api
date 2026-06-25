@@ -7,7 +7,7 @@ import { Role } from '../constant/auth.constant';
 interface JwtPayload {
   sub: number;
   email: string;
-  roles: Role;
+  role: Role;
 }
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -23,12 +23,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // Passport automatically decodes the signature. If valid, it passes the payload here.
-  async validate(payload: JwtPayload) {
+  validate(payload: JwtPayload) {
     // The returned object is automatically attached to the Request object as req.user
     return {
       userId: payload.sub,
       email: payload.email,
-      roles: payload.roles,
+      role: payload.role,
     };
   }
 }

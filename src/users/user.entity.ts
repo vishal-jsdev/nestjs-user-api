@@ -4,21 +4,21 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
   @Column({
     nullable: true,
   })
-  firstName: string;
+  firstName?: string;
   @Column({
     nullable: true,
   })
-  lastName: string;
+  lastName?: string;
   @Column({
     type: 'enum',
     enum: ['male', 'female'],
     nullable: true,
   })
-  gender: string;
+  gender!: string;
 
   @Column({
     unique: true,
@@ -42,5 +42,5 @@ export class User {
   @Column({
     nullable: true,
   })
-  refreshToken: string;
+  refreshToken?: string;
 }
