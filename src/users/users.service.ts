@@ -85,8 +85,8 @@ export class UsersService {
     return user;
   }
 
-  updatedUser(user: User) {
-    this.userRepository.save(user);
+  async updatedUser(user: User) {
+    await this.userRepository.save(user);
   }
 
   users: { id: number; email: string; gender: string; isMarried: boolean }[] = [

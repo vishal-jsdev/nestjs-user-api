@@ -42,7 +42,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
     const { token, refreshToken } = await this.generateToken(user);
-    user.refreshToken = refreshToken;
+    user.refreshToken = await this.hashingProvider.hashPassword(refreshToken);
     await this.userService.updatedUser(user);
     return { token, refreshToken };
   }
@@ -92,7 +92,10 @@ export class AuthService {
       );
 
       const user = await this.userService.findUserById(sub);
-      return await this.generateToken(user);
+      const { token, refreshToken } = await this.generateToken(user);
+      user.refreshToken = await this.hashingProvider.hashPassword(refreshToken);
+      await this.userService.updatedUser(user);
+      return { token, refreshToken };
     } catch (error) {
       throw new UnauthorizedException(error);
     }
