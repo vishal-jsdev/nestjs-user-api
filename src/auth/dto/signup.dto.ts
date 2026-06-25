@@ -1,10 +1,12 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
+import { Role } from '../constant/auth.constant';
 
 export class SignupDto {
   @IsString()
@@ -31,7 +33,7 @@ export class SignupDto {
   @IsOptional()
   isMarried?: boolean;
 
-  @IsString()
   @IsNotEmpty()
-  roles!: string;
+  @IsEnum(Role)
+  role!: string;
 }

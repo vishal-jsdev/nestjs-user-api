@@ -41,8 +41,10 @@ export class AuthService {
     if (!isEqual) {
       throw new UnauthorizedException('Invalid email or password');
     }
-
-    return await this.generateToken(user);
+    const { token, refreshToken } = await this.generateToken(user);
+    user.refreshToken = refreshToken;
+    await this.userService.updatedUser(user);
+    return { token, refreshToken };
   }
 
   private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
@@ -64,13 +66,13 @@ export class AuthService {
     const accessToken = await this.signToken(
       user.id,
       this.authConfiguration.expiresIn,
-      { email: user.email, roles: user.roles },
+      { email: user.email, roles: user.role },
     );
 
     const refreshToken = await this.signToken(
       user.id,
       this.authConfiguration.refreshTokenExpiresIn,
-      { roles: user.roles },
+      { roles: user.role },
     );
     return {
       token: accessToken,

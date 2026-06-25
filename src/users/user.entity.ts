@@ -14,6 +14,8 @@ export class User {
   })
   lastName: string;
   @Column({
+    type: 'enum',
+    enum: ['male', 'female'],
     nullable: true,
   })
   gender: string;
@@ -35,5 +37,10 @@ export class User {
     enum: Role,
     default: Role.User,
   })
-  roles!: string;
+  role!: string;
+
+  @Column({
+    nullable: true,
+  })
+  refreshToken: string;
 }

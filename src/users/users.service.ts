@@ -85,6 +85,10 @@ export class UsersService {
     return user;
   }
 
+  updatedUser(user: User) {
+    this.userRepository.save(user);
+  }
+
   users: { id: number; email: string; gender: string; isMarried: boolean }[] = [
     { id: 1, email: 'jeo@gmail.com', gender: 'male', isMarried: false },
     { id: 2, email: 'john@gmail.com', gender: 'male', isMarried: false },

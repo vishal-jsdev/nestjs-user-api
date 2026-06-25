@@ -36,12 +36,14 @@ export class UsersController {
   }
 
   @Post()
+  @Roles(Role.User, Role.Admin)
   createUser(@Body() user: CreateUserDto): UserResponseDto {
     const userData = this.userService.createUser(user);
     return plainToInstance(UserResponseDto, userData);
   }
 
   @Patch(':id')
+  @Roles(Role.User, Role.Admin)
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() user: UpdateUserDto,
@@ -51,6 +53,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   getUser(@Param('id', ParseIntPipe) id: number): UserResponseDto {
     const user = this.userService.getUser(id);
     return plainToInstance(UserResponseDto, user);
