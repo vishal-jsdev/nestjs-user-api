@@ -33,7 +33,7 @@ export class SignupDto {
   @IsOptional()
   isMarried?: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(Role)
-  role!: string;
+  role?: string;
 }
