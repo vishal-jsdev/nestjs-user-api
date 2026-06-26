@@ -92,6 +92,15 @@ export class AuthService {
       );
 
       const user = await this.userService.findUserById(sub);
+      const isEqualExistingPassword =
+        await this.hashingProvider.comparePassword(
+          refreshTokenDto.refreshToken,
+          user.refreshToken ?? '',
+        );
+      if (!isEqualExistingPassword) {
+        throw new UnauthorizedException('Invalid Token');
+      }
+
       const { token, refreshToken } = await this.generateToken(user);
       user.refreshToken = await this.hashingProvider.hashPassword(refreshToken);
       await this.userService.updatedUser(user);
