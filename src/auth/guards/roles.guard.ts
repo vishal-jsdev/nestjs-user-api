@@ -20,9 +20,11 @@ export class RolesGuard implements CanActivate {
     }
 
     // 3. Extract user from the request (populated previously by an AuthGuard)
-    const { user } = context.switchToHttp().getRequest();
+    const { user }: { user: { role: string } } = context
+      .switchToHttp()
+      .getRequest();
 
     // 4. Validate if the user holds a required role
-    return requiredRoles.some((role) => user?.role === role);
+    return requiredRoles.some((role) => user?.role === role.toString());
   }
 }

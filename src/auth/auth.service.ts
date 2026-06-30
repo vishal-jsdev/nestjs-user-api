@@ -82,7 +82,7 @@ export class AuthService {
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     try {
-      const { sub } = await this.jwtService.verifyAsync(
+      const payload: { sub: string } = await this.jwtService.verifyAsync(
         refreshTokenDto.refreshToken,
         {
           secret: this.authConfiguration.secret,
@@ -91,7 +91,7 @@ export class AuthService {
         },
       );
 
-      const user = await this.userService.findUserById(sub);
+      const user = await this.userService.findUserById(payload.sub);
       const isEqualExistingPassword =
         await this.hashingProvider.comparePassword(
           refreshTokenDto.refreshToken,

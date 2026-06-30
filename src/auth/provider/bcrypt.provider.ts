@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 export class BcryptProvider implements HashingProvider {
   public async hashPassword(password: string): Promise<string> {
     // Generate salt
-    const salt = await bcrypt.genSalt(10);
+    const salt: String = await bcrypt.genSalt(10);
     //Hash a password
     return await bcrypt.hash(password, salt);
   }
@@ -14,6 +14,6 @@ export class BcryptProvider implements HashingProvider {
     plainPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return bcrypt.compare(plainPassword, hashedPassword);
+    return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }

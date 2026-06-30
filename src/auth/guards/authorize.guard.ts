@@ -9,6 +9,7 @@ import type { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import authConfig from '../config/auth.config';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 
 interface AuthRequest extends Request {
   user;
@@ -32,7 +33,7 @@ export class AuthorizeGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request: AuthRequest = context.switchToHttp().getRequest();
     const authorizationHeader = request.headers.authorization;
     if (!authorizationHeader) {
       throw new UnauthorizedException();
@@ -42,11 +43,12 @@ export class AuthorizeGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.authConfiguration.secret,
-        audience: this.authConfiguration.audience,
-        issuer: this.authConfiguration.issuer,
-      });
+      const payload: { sub: string; email: string } =
+        await this.jwtService.verifyAsync(token, {
+          secret: this.authConfiguration.secret,
+          audience: this.authConfiguration.audience,
+          issuer: this.authConfiguration.issuer,
+        });
 
       request.user = payload;
     } catch {
