@@ -5,8 +5,10 @@ import * as bcrypt from 'bcrypt';
 export class BcryptProvider implements HashingProvider {
   public async hashPassword(password: string): Promise<string> {
     // Generate salt
-    const salt: String = await bcrypt.genSalt(10);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const salt: unknown = await bcrypt.genSalt(10);
     //Hash a password
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return await bcrypt.hash(password, salt);
   }
 
@@ -14,6 +16,7 @@ export class BcryptProvider implements HashingProvider {
     plainPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }
