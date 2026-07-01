@@ -49,7 +49,7 @@ export class UsersService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    let user;
+    let user: User | null;
     try {
       user = await this.userRepository.findOneBy({ email });
     } catch (error) {
@@ -61,10 +61,10 @@ export class UsersService {
       throw new UnauthorizedException('User does not exist!');
     }
 
-    return user as User;
+    return user;
   }
 
-  async findUserById(id: any) {
+  async findUserById(id: number) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new HttpException(
@@ -86,6 +86,12 @@ export class UsersService {
   }
 
   async updatedUser(user: User) {
+    const existingUser = await this.userRepository.findOneBy({
+      email: user.email,
+    });
+    if (existingUser && existingUser.id !== user.id) {
+      throw new ConflictException('email is already exists!');
+    }
     await this.userRepository.save(user);
   }
 

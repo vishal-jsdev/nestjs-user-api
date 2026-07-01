@@ -82,7 +82,7 @@ export class AuthService {
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     try {
-      const payload: { sub: string } = await this.jwtService.verifyAsync(
+      const payload: { sub: number } = await this.jwtService.verifyAsync(
         refreshTokenDto.refreshToken,
         {
           secret: this.authConfiguration.secret,

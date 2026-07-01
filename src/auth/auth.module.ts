@@ -24,10 +24,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     ConfigModule.forFeature(authConfig),
     JwtModule.registerAsync(authConfig.asProvider()),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: process.env.JWT_TOKEN_SECRET, // Must match secretOrKey in JwtStrategy
-      signOptions: { expiresIn: '1h' }, // Token expiration window
-    }),
   ],
   exports: [HashingProvider],
 })

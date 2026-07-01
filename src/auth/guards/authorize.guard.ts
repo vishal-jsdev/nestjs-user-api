@@ -11,8 +11,12 @@ import authConfig from '../config/auth.config';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
+interface JwtPayload {
+  sub: number;
+  email: string;
+}
 interface AuthRequest extends Request {
-  user;
+  user: JwtPayload;
 }
 
 @Injectable()
@@ -36,23 +40,22 @@ export class AuthorizeGuard implements CanActivate {
     const request: AuthRequest = context.switchToHttp().getRequest();
     const authorizationHeader = request.headers.authorization;
     if (!authorizationHeader) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid header');
     }
     const [scheme, token] = authorizationHeader.split(' ');
     if (scheme !== 'Bearer' || !token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
     try {
-      const payload: { sub: string; email: string } =
-        await this.jwtService.verifyAsync(token, {
-          secret: this.authConfiguration.secret,
-          audience: this.authConfiguration.audience,
-          issuer: this.authConfiguration.issuer,
-        });
+      const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
+        secret: this.authConfiguration.secret,
+        audience: this.authConfiguration.audience,
+        issuer: this.authConfiguration.issuer,
+      });
 
       request.user = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
 
     return true;

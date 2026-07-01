@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -15,6 +16,7 @@ export class SignupDto {
   email!: string;
 
   @IsString()
+  @IsNotEmpty()
   @MinLength(6)
   password!: string;
 
@@ -30,10 +32,11 @@ export class SignupDto {
   @IsEnum(['male', 'female'])
   gender?: string;
 
+  @IsBoolean()
   @IsOptional()
   isMarried?: boolean;
 
   @IsOptional()
   @IsEnum(Role)
-  role?: string;
+  role?: Role;
 }

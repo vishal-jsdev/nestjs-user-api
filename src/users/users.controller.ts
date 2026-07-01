@@ -16,14 +16,12 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { PageQueryDto } from './dtos/page-query.dto';
-import { AuthorizeGuard } from 'src/auth/guards/authorize.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/constant/auth.constant';
 
 @Controller('users')
-// @UseGuards(AuthorizeGuard)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
