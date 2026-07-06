@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order, OrderItem } from './order.entity';
+import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
+import { OrderItem } from './orderItem.entity';
 
 interface JwtPayload {
   sub: number;

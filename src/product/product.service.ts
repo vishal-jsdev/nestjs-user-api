@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { In, Repository } from 'typeorm';
 import { Product } from './product.entity';
@@ -18,8 +23,9 @@ export class ProductService {
       name: createProductDto.name,
     });
     if (productExist) {
-      throw new BadRequestException('Product is already existed!');
+      throw new ConflictException('Product is already existed!');
     }
+    createProductDto.SKU = createProductDto.name.toUpperCase();
     const product = this.productRepository.create(createProductDto);
     const productData = await this.productRepository.save(product);
     return productData;
@@ -30,7 +36,7 @@ export class ProductService {
       id: updateProductDto.id,
     });
     if (!product) {
-      throw new BadRequestException('Product is not found!');
+      throw new NotFoundException('Product is not found!');
     }
     const saveData = {
       ...product,

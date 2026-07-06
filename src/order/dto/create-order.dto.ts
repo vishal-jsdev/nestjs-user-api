@@ -16,9 +16,6 @@ export class CreateProductDto {
 }
 
 export class CreateOrderDto {
-  @IsOptional()
-  orderNumber: string;
-
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
   items: CreateOrderItemDto[];

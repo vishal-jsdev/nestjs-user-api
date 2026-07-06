@@ -3,7 +3,6 @@ import { User } from 'src/users/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   ManyToOne,
   OneToMany,
   CreateDateColumn,
@@ -11,6 +10,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
+import { OrderItem } from './orderItem.entity';
 
 @Entity('orders')
 export class Order {
@@ -30,22 +30,4 @@ export class Order {
   @ManyToMany(() => Product, (product) => product.orders, { eager: true })
   @JoinTable()
   products: Product[];
-}
-
-@Entity('order_items')
-export class OrderItem {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  productId: number;
-
-  @Column('int')
-  quantity: number;
-
-  @Column('decimal')
-  price: number;
-
-  @ManyToOne(() => Order, (order) => order.items)
-  order: Order;
 }

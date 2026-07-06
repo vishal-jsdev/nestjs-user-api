@@ -1,42 +1,44 @@
 import {
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Length,
+  Min,
 } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @IsOptional()
   @IsString()
-  SKU: string;
+  SKU?: string;
 
-  @IsOptional()
-  @IsInt()
-  salePrice: number;
+  @IsNumber()
+  @Min(1)
+  salePrice!: number;
 
   @IsOptional()
   @IsString()
   @Length(3)
-  currencyCode: string;
+  currencyCode?: string;
 
-  @IsOptional()
   @IsInt()
-  quantity: number;
+  @Min(0)
+  quantity!: number;
 
   @IsOptional()
   @IsString()
-  category: string;
+  category?: string;
 
   @IsOptional()
   @IsString()
-  tags: string;
+  tags?: string;
 }

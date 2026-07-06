@@ -8,23 +8,23 @@ export class ProductResponseDto {
   name!: string;
 
   @Expose()
-  description: string;
+  description?: string;
 
   @Expose()
-  SKU: string;
+  SKU!: string;
 
   @Expose()
-  salePrice: number;
+  salePrice!: number;
 
   @Expose()
-  currencyCode: string;
+  currencyCode?: string;
 
   @Expose()
-  quantity: number;
+  quantity!: number;
 
   @Expose()
-  category: string;
+  category?: string;
 
   @Expose()
-  tags: string;
+  tags?: string;
 }

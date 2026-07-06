@@ -10,43 +10,45 @@ export class Product {
     nullable: false,
     unique: true,
   })
-  name: string;
+  name!: string;
 
   @Column({
     nullable: true,
   })
-  description: string;
+  description?: string;
+
+  @Column({
+    nullable: false,
+    unique: true,
+  })
+  SKU!: string;
+
+  @Column({
+    nullable: false,
+  })
+  salePrice!: number;
 
   @Column({
     nullable: true,
   })
-  SKU: string;
+  currencyCode?: string;
+
+  @Column({
+    nullable: true,
+    default: 0,
+  })
+  quantity!: number;
 
   @Column({
     nullable: true,
   })
-  salePrice: number;
+  category?: string;
 
   @Column({
     nullable: true,
   })
-  currencyCode: string;
+  tags?: string;
 
-  @Column({
-    nullable: true,
-  })
-  quantity: number;
-
-  @Column({
-    nullable: true,
-  })
-  category: string;
-
-  @Column({
-    nullable: true,
-  })
-  tags: string;
-
-  @ManyToMany(() => Order, (order) => order.products, { onDelete: 'CASCADE' })
+  @ManyToMany(() => Order, (order) => order.products)
   orders: Order[];
 }
