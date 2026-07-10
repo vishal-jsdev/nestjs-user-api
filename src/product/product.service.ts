@@ -32,6 +32,12 @@ export class ProductService {
   }
 
   async updateProduct(updateProductDto: UpdateProductDto) {
+    const SKUExisting = await this.productRepository.findOneBy({
+      SKU: updateProductDto.SKU,
+    });
+    if (SKUExisting && SKUExisting.id !== updateProductDto.id) {
+      throw new BadRequestException('SKU name already existed');
+    }
     const product = await this.productRepository.findOneBy({
       id: updateProductDto.id,
     });
