@@ -36,7 +36,14 @@ export class ProductService {
       SKU: updateProductDto.SKU,
     });
     if (SKUExisting && SKUExisting.id !== updateProductDto.id) {
-      throw new BadRequestException('SKU name already existed');
+      throw new BadRequestException('SKU name is already existed');
+    }
+
+    const nameExisting = await this.productRepository.findOneBy({
+      name: updateProductDto.name,
+    });
+    if (nameExisting && nameExisting.id !== updateProductDto.id) {
+      throw new BadRequestException('Name is already existed');
     }
     const product = await this.productRepository.findOneBy({
       id: updateProductDto.id,
