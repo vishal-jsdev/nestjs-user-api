@@ -32,25 +32,29 @@ export class ProductService {
   }
 
   async updateProduct(updateProductDto: UpdateProductDto) {
-    const SKUExisting = await this.productRepository.findOneBy({
-      SKU: updateProductDto.SKU,
-    });
-    if (SKUExisting && SKUExisting.id !== updateProductDto.id) {
-      throw new BadRequestException('SKU name is already existed');
-    }
-
-    const nameExisting = await this.productRepository.findOneBy({
-      name: updateProductDto.name,
-    });
-    if (nameExisting && nameExisting.id !== updateProductDto.id) {
-      throw new BadRequestException('Name is already existed');
-    }
     const product = await this.productRepository.findOneBy({
       id: updateProductDto.id,
     });
     if (!product) {
       throw new NotFoundException('Product is not found!');
     }
+    if (updateProductDto.SKU && updateProductDto.SKU !== product.SKU) {
+      const SKUExisting = await this.productRepository.findOneBy({
+        SKU: updateProductDto.SKU,
+      });
+      if (SKUExisting && SKUExisting.id !== updateProductDto.id) {
+        throw new ConflictException('SKU name is already existed');
+      }
+    }
+    if (updateProductDto.name && updateProductDto.name !== product.name) {
+      const nameExisting = await this.productRepository.findOneBy({
+        name: updateProductDto.name,
+      });
+      if (nameExisting && nameExisting.id !== updateProductDto.id) {
+        throw new ConflictException('Name is already existed');
+      }
+    }
+
     const saveData = {
       ...product,
       ...updateProductDto,
