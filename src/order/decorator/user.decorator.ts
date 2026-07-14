@@ -1,9 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { JwtPayload } from 'src/auth/constant/auth.constant';
 
-interface JwtPayload {
-  sub: number;
-  email: string;
-}
 interface AuthRequest extends Request {
   user: JwtPayload;
 }

@@ -4,17 +4,17 @@ import { Order } from './order.entity';
 @Entity('order_items')
 export class OrderItem {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  productId: number;
+  productId!: number;
 
   @Column('int')
-  quantity: number;
+  quantity!: number;
 
   @Column('decimal')
-  price: number;
+  price!: number;
 
   @ManyToOne(() => Order, (order) => order.items)
-  order: Order;
+  order!: Order;
 }

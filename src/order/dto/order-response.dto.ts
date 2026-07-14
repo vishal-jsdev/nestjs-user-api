@@ -4,29 +4,29 @@ import { UserResponseDto } from 'src/users/dtos/user-response.dto';
 
 export class OrderItemResponseDto {
   @Expose()
-  id: number;
+  id!: number;
   @Expose()
-  productId: number;
+  productId!: number;
   @Expose()
-  quantity: number;
+  quantity!: number;
   @Expose()
-  price: number;
+  price!: number;
 }
 
 export class OrderResponseDto {
   @Expose()
-  id: number;
+  id!: number;
   @Expose()
-  createdAt: Date;
+  createdAt!: Date;
   @Expose()
   @Type(() => OrderItemResponseDto)
-  items: OrderItemResponseDto[];
+  items!: OrderItemResponseDto[];
 
   @Expose()
   @Type(() => UserResponseDto)
-  user: UserResponseDto;
+  user!: UserResponseDto;
 
   @Expose()
   @Type(() => ProductResponseDto)
-  products: ProductResponseDto[];
+  products?: ProductResponseDto[];
 }

@@ -6,11 +6,8 @@ import { Repository } from 'typeorm';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
 import { OrderItem } from './orderItem.entity';
+import { JwtPayload } from 'src/auth/constant/auth.constant';
 
-interface JwtPayload {
-  sub: number;
-  email: string;
-}
 @Injectable()
 export class OrderService {
   constructor(

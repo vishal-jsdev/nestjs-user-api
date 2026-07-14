@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { plainToInstance } from 'class-transformer';
@@ -6,6 +14,8 @@ import { ProductResponseDto } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PageQueryDto } from './dto/page-query.dto';
 import { PaginationResponseDto } from './dto/pagination-response.dto';
+
+import { Param } from '@nestjs/common/decorators';
 
 @Controller('product')
 export class ProductController {
@@ -17,9 +27,15 @@ export class ProductController {
     return plainToInstance(ProductResponseDto, product);
   }
 
-  @Patch()
-  async updateProduct(@Body() updateProductDto: UpdateProductDto) {
-    const product = await this.productService.updateProduct(updateProductDto);
+  @Patch(':id')
+  async updateProduct(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    const product = await this.productService.updateProduct(
+      id,
+      updateProductDto,
+    );
     return plainToInstance(ProductResponseDto, product);
   }
 

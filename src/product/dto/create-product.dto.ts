@@ -1,5 +1,6 @@
 import {
   IsInt,
+  IsLowercase,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,6 +12,7 @@ import {
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
+  @IsLowercase()
   name!: string;
 
   @IsOptional()

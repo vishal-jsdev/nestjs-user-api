@@ -4,9 +4,13 @@ import { ProductResponseDto } from './product-response.dto';
 export class PaginationResponseDto {
   @Expose()
   @Type(() => ProductResponseDto)
-  data: ProductResponseDto[];
+  data!: ProductResponseDto[];
   @Expose()
-  totalPages: number;
+  totalPages!: number;
   @Expose()
-  totalItems: number;
+  totalItems!: number;
+  @Expose()
+  page?: number;
+  @Expose()
+  limit?: number;
 }

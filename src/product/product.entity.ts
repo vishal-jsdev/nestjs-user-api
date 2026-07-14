@@ -4,7 +4,7 @@ import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({
     nullable: false,
@@ -50,5 +50,5 @@ export class Product {
   tags?: string;
 
   @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
+  orders!: Order[];
 }

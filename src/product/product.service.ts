@@ -30,9 +30,9 @@ export class ProductService {
     return productData;
   }
 
-  async updateProduct(updateProductDto: UpdateProductDto) {
+  async updateProduct(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.productRepository.findOneBy({
-      id: updateProductDto.id,
+      id,
     });
     if (!product) {
       throw new NotFoundException('Product is not found!');
@@ -41,7 +41,7 @@ export class ProductService {
       const SKUExisting = await this.productRepository.findOneBy({
         SKU: updateProductDto.SKU,
       });
-      if (SKUExisting && SKUExisting.id !== updateProductDto.id) {
+      if (SKUExisting && SKUExisting.id !== id) {
         throw new ConflictException('SKU name is already existed');
       }
     }
@@ -49,7 +49,7 @@ export class ProductService {
       const nameExisting = await this.productRepository.findOneBy({
         name: updateProductDto.name,
       });
-      if (nameExisting && nameExisting.id !== updateProductDto.id) {
+      if (nameExisting && nameExisting.id !== id) {
         throw new ConflictException('Name is already existed');
       }
     }
@@ -63,7 +63,7 @@ export class ProductService {
   }
 
   async getAllProduct(pageQueryDto: PageQueryDto) {
-    const skip = (pageQueryDto.page - 1) * pageQueryDto.limit;
+    const skip = ((pageQueryDto.page ?? 1) - 1) * (pageQueryDto.limit ?? 10);
     const queryBuilder = this.productRepository.createQueryBuilder('product');
 
     // Attach filters, joins, or sorting conditions safely here
@@ -75,8 +75,10 @@ export class ProductService {
 
     return {
       data: products,
-      totalPages: Math.ceil(totalCount / pageQueryDto.limit),
+      totalPages: Math.ceil(totalCount / (pageQueryDto.limit ?? 10)),
       totalItems: totalCount,
+      page: pageQueryDto.page,
+      limit: pageQueryDto.limit,
     };
   }
 

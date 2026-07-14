@@ -10,11 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import authConfig from '../config/auth.config';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { JwtPayload } from '../constant/auth.constant';
 
-interface JwtPayload {
-  sub: number;
-  email: string;
-}
 interface AuthRequest extends Request {
   user: JwtPayload;
 }

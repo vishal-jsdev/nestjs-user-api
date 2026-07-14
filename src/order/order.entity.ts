@@ -15,19 +15,19 @@ import { OrderItem } from './orderItem.entity';
 @Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
-  items: OrderItem[];
+  items!: OrderItem[];
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user!: User;
 
   @ManyToMany(() => Product, (product) => product.orders, { eager: true })
   @JoinTable()
-  products: Product[];
+  products!: Product[];
 }

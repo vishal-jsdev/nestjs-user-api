@@ -4,17 +4,14 @@ import { OrderService } from './order.service';
 import { plainToInstance } from 'class-transformer';
 import { OrderResponseDto } from './dto/order-response.dto';
 import { CurrentUser } from './decorator/user.decorator';
-interface JwtPayload {
-  sub: number;
-  email: string;
-}
+
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
   @Post()
   async createOrder(
     @Body() createOrderDto: CreateOrderDto,
-    @CurrentUser() user: JwtPayload,
+    @CurrentUser() user: any,
   ) {
     const order = await this.orderService.createOrder(createOrderDto, user);
     return plainToInstance(OrderResponseDto, order);
