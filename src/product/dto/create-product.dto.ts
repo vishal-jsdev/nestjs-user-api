@@ -1,6 +1,6 @@
+import { Transform } from 'class-transformer';
 import {
   IsInt,
-  IsLowercase,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -12,7 +12,9 @@ import {
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  @IsLowercase()
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value + '',
+  )
   name!: string;
 
   @IsOptional()

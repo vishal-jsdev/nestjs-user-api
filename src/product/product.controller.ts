@@ -12,9 +12,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { plainToInstance } from 'class-transformer';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PageQueryDto } from './dto/page-query.dto';
+import { PageQueryDto } from './constant/page-query.dto';
 import { PaginationResponseDto } from './dto/pagination-response.dto';
-
 import { Param } from '@nestjs/common/decorators';
 
 @Controller('product')

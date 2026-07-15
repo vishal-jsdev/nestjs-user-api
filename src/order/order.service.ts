@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
 import { OrderItem } from './orderItem.entity';
-import { JwtPayload } from 'src/auth/constant/auth.constant';
+import { JwtPayload } from 'src/interfaces/interface';
 
 @Injectable()
 export class OrderService {

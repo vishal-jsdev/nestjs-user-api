@@ -4,7 +4,7 @@ import { OrderService } from './order.service';
 import { plainToInstance } from 'class-transformer';
 import { OrderResponseDto } from './dto/order-response.dto';
 import { CurrentUser } from './decorator/user.decorator';
-import type { JwtPayload } from 'src/auth/constant/auth.constant';
+import type { JwtPayload } from 'src/interfaces/interface';
 
 @Controller('order')
 export class OrderController {

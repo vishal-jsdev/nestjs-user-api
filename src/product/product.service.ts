@@ -8,7 +8,7 @@ import { In, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PageQueryDto } from './dto/page-query.dto';
+import { PageQueryDto } from './constant/page-query.dto';
 
 @Injectable()
 export class ProductService {
