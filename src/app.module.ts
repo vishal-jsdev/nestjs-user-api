@@ -8,12 +8,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import envValidator from './config/env.validation';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthorizeGuard } from './auth/guards/authorize.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import authConfig from './auth/config/auth.config';
+import { LoggingInterceptor } from './interceptor/logging.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
+import { createKeyv } from '@keyv/redis';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -45,6 +48,13 @@ const ENV = process.env.NODE_ENV;
     JwtModule.registerAsync(authConfig.asProvider()),
     ProductModule,
     OrderModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: () => ({
+        stores: [createKeyv('redis://localhost:6379')],
+        ttl: 60000,
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -52,6 +62,10 @@ const ENV = process.env.NODE_ENV;
     {
       provide: APP_GUARD,
       useClass: AuthorizeGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })
