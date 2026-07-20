@@ -16,15 +16,20 @@ import { PageQueryDto } from './constant/page-query.dto';
 import { PaginationResponseDto } from './dto/pagination-response.dto';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { Param, UseInterceptors } from '@nestjs/common/decorators';
+import { CacheService } from './cache.service';
 
 @UseInterceptors(CacheInterceptor)
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const product = await this.productService.createProduct(createProductDto);
+    await this.cacheService.deleteKey('products');
     return plainToInstance(ProductResponseDto, product);
   }
 
@@ -37,11 +42,12 @@ export class ProductController {
       id,
       updateProductDto,
     );
+    await this.cacheService.deleteKey('products');
     return plainToInstance(ProductResponseDto, product);
   }
 
   @Get()
-  @CacheKey('custom_key1') // Controlling the key
+  @CacheKey('products') // Controlling the key
   @CacheTTL(120000) // Controling the duration
   async getAllProduct(@Query() pageQueryDto: PageQueryDto) {
     const paginationResponse =

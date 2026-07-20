@@ -17,6 +17,8 @@ import authConfig from './auth/config/auth.config';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
+import { AudioModule } from './audio/audio.module';
+import { BullModule } from '@nestjs/bullmq';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -52,8 +54,15 @@ const ENV = process.env.NODE_ENV;
       isGlobal: true,
       useFactory: () => ({
         stores: [createKeyv('redis://localhost:6379')],
-        ttl: 60000,
+        ttl: 10 * 60 * 1000,
       }),
+    }),
+    AudioModule,
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
     }),
   ],
   controllers: [AppController],
