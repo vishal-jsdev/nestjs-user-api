@@ -17,8 +17,8 @@ import authConfig from './auth/config/auth.config';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
-import { AudioModule } from './audio/audio.module';
 import { BullModule } from '@nestjs/bullmq';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -57,11 +57,23 @@ const ENV = process.env.NODE_ENV;
         ttl: 10 * 60 * 1000,
       }),
     }),
-    AudioModule,
     BullModule.forRoot({
       connection: {
         host: 'localhost',
         port: 6379,
+      },
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'sandbox.smtp.mailtrap.io', // Use Mailtrap or Ethereal for simulation
+        port: 2525,
+        auth: {
+          user: '3aca0176745422',
+          pass: '5e7a4e43f5aa2a',
+        },
+      },
+      defaults: {
+        from: '"No Reply" <noreply@example.com>',
       },
     }),
   ],

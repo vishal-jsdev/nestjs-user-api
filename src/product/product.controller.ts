@@ -17,9 +17,10 @@ import { PaginationResponseDto } from './dto/pagination-response.dto';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { Param, UseInterceptors } from '@nestjs/common/decorators';
 import { CacheService } from './cache.service';
+import { PRODUCT } from './constant/product.constant';
 
 @UseInterceptors(CacheInterceptor)
-@Controller('product')
+@Controller(PRODUCT)
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
