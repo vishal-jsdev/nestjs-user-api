@@ -17,7 +17,9 @@ export class MailService {
         orderId: orderData.orderId,
         amount: orderData.amount,
       },
-      html: '<h1> Thank you for your order </h1>',
+      html: `<h1> Thank you for your order </h1><br> Order detail: <br/>
+      order ID: ${orderData.orderId} <br/>
+      order Amount: ${orderData.amount}`,
     });
     console.log(
       `[SIMULATION] Confirmation email sent for order ${orderData.orderId}`,

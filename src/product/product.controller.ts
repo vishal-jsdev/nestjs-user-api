@@ -20,7 +20,7 @@ import { CacheService } from './cache.service';
 import { PRODUCT } from './constant/product.constant';
 
 @UseInterceptors(CacheInterceptor)
-@Controller(PRODUCT)
+@Controller('product')
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
@@ -30,7 +30,7 @@ export class ProductController {
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const product = await this.productService.createProduct(createProductDto);
-    await this.cacheService.deleteKey('products');
+    await this.cacheService.deleteKey(PRODUCT);
     return plainToInstance(ProductResponseDto, product);
   }
 
@@ -43,12 +43,12 @@ export class ProductController {
       id,
       updateProductDto,
     );
-    await this.cacheService.deleteKey('products');
+    await this.cacheService.deleteKey(PRODUCT);
     return plainToInstance(ProductResponseDto, product);
   }
 
   @Get()
-  @CacheKey('products') // Controlling the key
+  @CacheKey(PRODUCT) // Controlling the key
   @CacheTTL(120000) // Controling the duration
   async getAllProduct(@Query() pageQueryDto: PageQueryDto) {
     const paginationResponse =

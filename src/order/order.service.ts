@@ -7,6 +7,8 @@ import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
 import { OrderItem } from './orderItem.entity';
 import { JwtPayload } from 'src/interfaces/interface';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class OrderService {
@@ -15,6 +17,7 @@ export class OrderService {
     private readonly ordersRepository: Repository<Order>,
 
     private readonly productService: ProductService,
+    @InjectQueue('email') private readonly emailQueue: Queue,
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto, user: JwtPayload) {
@@ -56,6 +59,11 @@ export class OrderService {
     });
     const savedOrder = await this.ordersRepository.save(order);
     await this.productService.updateStock(productsMap);
+    await this.emailQueue.add('send-confirmation-email', {
+      id: savedOrder.id,
+      email: user.email,
+      items: savedOrder.items,
+    });
     return savedOrder;
   }
 }

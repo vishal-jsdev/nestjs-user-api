@@ -19,6 +19,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
 import { BullModule } from '@nestjs/bullmq';
 import { MailerModule } from '@nestjs-modules/mailer';
+import emailConfig from './config/email.config';
 
 const ENV = process.env.NODE_ENV;
 @Module({
@@ -27,7 +28,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV.trim()}`,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, emailConfig],
       validationSchema: envValidator,
     }),
     TypeOrmModule.forRootAsync({
@@ -53,28 +54,32 @@ const ENV = process.env.NODE_ENV;
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: () => ({
-        stores: [createKeyv('redis://localhost:6379')],
+        stores: [createKeyv(process.env.REDIS_URL)],
         ttl: 10 * 60 * 1000,
       }),
     }),
     BullModule.forRoot({
       connection: {
-        host: 'localhost',
-        port: 6379,
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
       },
     }),
-    MailerModule.forRoot({
-      transport: {
-        host: 'sandbox.smtp.mailtrap.io', // Use Mailtrap or Ethereal for simulation
-        port: 2525,
-        auth: {
-          user: '3aca0176745422',
-          pass: '5e7a4e43f5aa2a',
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: 'sandbox.smtp.mailtrap.io', // Use Mailtrap or Ethereal for simulation
+          port: 2525,
+          auth: {
+            user: configService.get('email.username'),
+            pass: configService.get('email.password'),
+          },
         },
-      },
-      defaults: {
-        from: '"No Reply" <noreply@example.com>',
-      },
+        defaults: {
+          from: '"No Reply" <noreply@example.com>',
+        },
+      }),
     }),
   ],
   controllers: [AppController],
