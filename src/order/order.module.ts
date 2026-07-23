@@ -6,8 +6,8 @@ import { Order } from './order.entity';
 import { ProductModule } from 'src/product/product.module';
 import { OrderItem } from './orderItem.entity';
 import { BullModule } from '@nestjs/bullmq';
-import { EmailProcessor } from './email.processor';
-import { MailService } from './mail.service';
+import { EmailProcessor } from '../email/email.processor';
+import { MailService } from '../email/mail.service';
 
 @Module({
   controllers: [OrderController],

@@ -36,7 +36,6 @@ const ENV = process.env.NODE_ENV;
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        //entities: [User],
         autoLoadEntities: configService.get('database.autoLoadEntities'),
         synchronize: configService.get('database.synchronize'),
         host: configService.get('database.host'),
@@ -69,7 +68,7 @@ const ENV = process.env.NODE_ENV;
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         transport: {
-          host: 'sandbox.smtp.mailtrap.io', // Use Mailtrap or Ethereal for simulation
+          host: configService.get('email.host'), // Use Mailtrap or Ethereal for simulation
           port: 2525,
           auth: {
             user: configService.get('email.username'),
