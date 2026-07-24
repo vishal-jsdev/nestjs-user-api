@@ -21,8 +21,8 @@ export class MailService {
         to: orderData.email,
         subject: `Order Confirmation - #${orderData.orderId}`,
         html: `<h1> Thank you for your order </h1><br> Order detail: <br/>
-      order ID: ${orderData.orderId} <br/>
-      order Amount: ${orderData.amount}`,
+      Order ID: ${orderData.orderId} <br/>
+      Order Amount: ${orderData.amount}`,
       });
       this.logger.log(
         `[SIMULATION] Confirmation email sent for order ${orderData.orderId}`,

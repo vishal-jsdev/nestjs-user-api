@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './order.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
 import { OrderItem } from './orderItem.entity';
@@ -13,9 +12,6 @@ import { InjectQueue } from '@nestjs/bullmq';
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(Order)
-    private readonly ordersRepository: Repository<Order>,
-
     private readonly productService: ProductService,
     @InjectQueue('email') private readonly emailQueue: Queue,
     private dataSource: DataSource,
@@ -41,6 +37,11 @@ export class OrderService {
       );
       const orderItems = createOrderDto.items.map((item) => {
         const product: Product = productsMap[item.productId];
+        if (!product) {
+          throw new BadRequestException(
+            `Product with ID ${item.productId} not found`,
+          );
+        }
         if (item.quantity > product.quantity) {
           throw new BadRequestException(
             `Stock is less than given order with product ${product.name}`,
