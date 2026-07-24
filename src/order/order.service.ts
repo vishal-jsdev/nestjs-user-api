@@ -66,13 +66,13 @@ export class OrderService {
         user: { id: user.sub },
       });
       const savedOrder = await queryRunner.manager.save(order);
-      await this.productService.updateStock(productsMap);
+      await this.productService.updateStock(productsMap, queryRunner);
+      await queryRunner.commitTransaction();
       await this.emailQueue.add('send-confirmation-email', {
         id: savedOrder.id,
         email: user.email,
         items: savedOrder.items,
       });
-      await queryRunner.commitTransaction();
       return savedOrder;
     } catch (error) {
       // 5. Rollback updates if any operation fails

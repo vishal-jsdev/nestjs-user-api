@@ -8,17 +8,18 @@ import { OrderItem } from './orderItem.entity';
 import { BullModule } from '@nestjs/bullmq';
 import { EmailProcessor } from '../email/email.processor';
 import { MailService } from '../email/mail.service';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   controllers: [OrderController],
-  providers: [OrderService, EmailProcessor, MailService],
+  providers: [OrderService],
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
     ProductModule,
     BullModule.registerQueue({
       name: 'email',
     }),
+    EmailModule,
   ],
-  exports: [MailService],
 })
 export class OrderModule {}

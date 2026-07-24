@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -23,7 +28,7 @@ export class MailService {
         `[SIMULATION] Confirmation email sent for order ${orderData.orderId}`,
       );
     } catch (error) {
-      throw new BadRequestException(
+      throw new InternalServerErrorException(
         error,
         'Exception is thrown while sending the email',
       );

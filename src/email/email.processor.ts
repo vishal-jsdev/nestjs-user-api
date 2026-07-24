@@ -12,11 +12,10 @@ export class EmailProcessor extends WorkerHost {
   constructor(private readonly mailService: MailService) {
     super();
   }
-  async process(job: Job): Promise<any> {
+  async process(job: Job<ConfirmationEmailData>): Promise<void> {
     switch (job.name) {
       case 'send-confirmation-email': {
         try {
-          // eslint-disable-next-line  @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           const amount = job.data.items.reduce(
             (p: number, c: { price: number }) => {
               p = p + c.price;
@@ -25,11 +24,8 @@ export class EmailProcessor extends WorkerHost {
             0,
           );
           await this.mailService.sendOrderConfirmation({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             email: job.data.email,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             orderId: job.data.id + '',
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             amount: amount,
           });
         } catch (error) {
