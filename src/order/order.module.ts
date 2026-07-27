@@ -5,10 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './order.entity';
 import { ProductModule } from 'src/product/product.module';
 import { OrderItem } from './orderItem.entity';
+import { BullModule } from '@nestjs/bullmq';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   controllers: [OrderController],
   providers: [OrderService],
-  imports: [TypeOrmModule.forFeature([Order, OrderItem]), ProductModule],
+  imports: [
+    TypeOrmModule.forFeature([Order, OrderItem]),
+    ProductModule,
+    BullModule.registerQueue({
+      name: 'email',
+    }),
+    EmailModule,
+  ],
 })
 export class OrderModule {}

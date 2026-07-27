@@ -15,6 +15,7 @@ export class OrderController {
     @CurrentUser() user: JwtPayload,
   ) {
     const order = await this.orderService.createOrder(createOrderDto, user);
+
     return plainToInstance(OrderResponseDto, order);
   }
 }

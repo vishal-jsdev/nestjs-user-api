@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { In, Repository } from 'typeorm';
+import { In, QueryRunner, Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -90,9 +90,12 @@ export class ProductService {
     return productsData;
   }
 
-  async updateStock(productsMap: Record<number, Product>) {
+  async updateStock(
+    productsMap: Record<number, Product>,
+    queryRunner: QueryRunner,
+  ) {
     for (const value of Object.values(productsMap)) {
-      await this.productRepository.save(value);
+      await queryRunner.manager.save(Product, value);
     }
   }
 }
