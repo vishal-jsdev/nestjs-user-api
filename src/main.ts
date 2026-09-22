@@ -26,7 +26,6 @@ async function bootstrap() {
     .setTitle('Inventory API Example')
     .setDescription('The inventory API description')
     .setVersion('1.0')
-    .addTag('cats') // Optional: Adds categories/tags
     .build();
 
   // 2. Create the JSON document
